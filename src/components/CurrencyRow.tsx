@@ -1,13 +1,15 @@
-export default function CurrencyRow() {
+export default function CurrencyRow(props) {
+  const {
+    currencyOptions
+  } = props
   return (
     <div>
       <input type="number" />
       <select>
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="JPY">JPY</option>
-        </select>
+        {currencyOptions.map(option => (
+          <option value={option}>{option}</option>
+        ))}  
+      </select>
     </div>
   )
 }

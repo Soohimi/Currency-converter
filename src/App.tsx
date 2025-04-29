@@ -13,7 +13,7 @@ function App() {
       .then(res => res.json())
       .then(data => {
         const rates = data.eur;
-        setCurrencyOptions(...Object.keys(rates));
+        setCurrencyOptions(Object.keys(rates));
       });
   }, []);
   
