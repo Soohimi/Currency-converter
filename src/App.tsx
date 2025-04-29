@@ -6,7 +6,6 @@ const BASE_URL = 'https://latest.currency-api.pages.dev/v1/currencies/eur.json'
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([])
-  console.log(currencyOptions)
 
   useEffect(() => {
     fetch(BASE_URL)
