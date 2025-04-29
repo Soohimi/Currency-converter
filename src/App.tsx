@@ -33,6 +33,16 @@ function App() {
         setExcahngeRate(data.eur[firstCurrency])
       });
   }, []);
+
+  function handleFromAmountChange(e) {
+    setAmount(e.target.value)
+    setAmountInFromCurrency(true)
+  }
+
+  function handleToAmountChange(e) {
+    setAmount(e.target.value)
+    setAmountInFromCurrency(false)
+  }
   
   return (
     <>
@@ -41,6 +51,7 @@ function App() {
         currencyOptions={currencyOptions}
         selectedCurrency={fromCurrency}
         onChangeCurrency={e => setFromCurrency(e.target.value)}
+        onCHangeAmount={handleFromAmountChange}
         amount={fromAmount}
       />
       <div className='equals'>=</div>
@@ -48,6 +59,7 @@ function App() {
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
         onChangeCurrency={e => setToCurrency(e.target.value)}
+        onCHangeAmount={handleToAmountChange}
         amount={toAmount}
       />
     </>
