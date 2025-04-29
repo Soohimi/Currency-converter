@@ -8,7 +8,7 @@ function App() {
   const [currencyOptions, setCurrencyOptions] = useState([])
   const [fromCurrency, setFromCurrency] = useState()
   const [toCurrency, setToCurrency] = useState()
-  const [exchangeRate, setExcahngeRate] = useState()
+  const [exchangeRate, setExchangeRate] = useState()
   const [amount, setAmount] = useState(1)
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
   
@@ -28,19 +28,31 @@ function App() {
         const rates = data.eur;
         const firstCurrency = Object.keys(rates)[143];
         setCurrencyOptions(Object.keys(rates));
-        setFromCurrency(data.eur)
+        setFromCurrency('eur');
         setToCurrency(firstCurrency)
-        setExcahngeRate(data.eur[firstCurrency])
+        setExchangeRate(data.eur[firstCurrency])
       });
   }, []);
 
+  useEffect(() => {
+    if (fromCurrency && toCurrency) {
+      fetch(BASE_URL)
+        .then(res => res.json())
+        .then(data => {
+          setExchangeRate(data[fromCurrency][toCurrency])
+        })
+    }
+  }, [fromCurrency, toCurrency]);
+  
+  
+
   function handleFromAmountChange(e) {
-    setAmount(e.target.value)
+    setAmount(e.target.valueAsNumber)
     setAmountInFromCurrency(true)
   }
 
   function handleToAmountChange(e) {
-    setAmount(e.target.value)
+    setAmount(e.target.valueAsNumber)
     setAmountInFromCurrency(false)
   }
   
@@ -51,7 +63,7 @@ function App() {
         currencyOptions={currencyOptions}
         selectedCurrency={fromCurrency}
         onChangeCurrency={e => setFromCurrency(e.target.value)}
-        onCHangeAmount={handleFromAmountChange}
+        onChangeAmount={handleFromAmountChange}
         amount={fromAmount}
       />
       <div className='equals'>=</div>
@@ -59,7 +71,7 @@ function App() {
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
         onChangeCurrency={e => setToCurrency(e.target.value)}
-        onCHangeAmount={handleToAmountChange}
+        onChangeAmount={handleToAmountChange}
         amount={toAmount}
       />
     </>
