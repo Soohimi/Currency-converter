@@ -15,7 +15,7 @@ h1 {
   color: #ccc;
 }
 
-.input {
+input {
   border: 1px solid #ccc;
   border-radius: .3rem;
   padding: .25rem;
