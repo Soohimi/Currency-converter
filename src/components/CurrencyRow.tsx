@@ -1,4 +1,12 @@
-export default function CurrencyRow(props) {
+interface CurrencyRowProps {
+  currencyOptions: string[];
+  selectedCurrency: string | undefined;
+  onChangeCurrency: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChangeAmount: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  amount: number;
+}
+
+export default function CurrencyRow(props: CurrencyRowProps) {
   const {
     currencyOptions,
     selectedCurrency,
@@ -13,7 +21,7 @@ export default function CurrencyRow(props) {
       <select value={selectedCurrency} onChange={onChangeCurrency}>
         {currencyOptions.map(option => (
           <option key={option} value={option}>{option}</option>
-        ))}  
+        ))}
       </select>
     </div>
   );

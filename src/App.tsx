@@ -2,60 +2,63 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import CurrencyRow from './components/CurrencyRow';
 
-const BASE_URL = 'https://latest.currency-api.pages.dev/v1/currencies/eur.json'
+const BASE_URL = 'https://latest.currency-api.pages.dev/v1/currencies';
 
 function App() {
-  const [currencyOptions, setCurrencyOptions] = useState([])
-  const [fromCurrency, setFromCurrency] = useState()
-  const [toCurrency, setToCurrency] = useState()
-  const [exchangeRate, setExchangeRate] = useState()
-  const [amount, setAmount] = useState(1)
-  const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
-  
-  let toAmount, fromAmount
-  if (amountInFromCurrency) {
-    fromAmount = amount
-    toAmount = amount * exchangeRate
+  const [currencyOptions, setCurrencyOptions] = useState<string[]>([]);
+  const [fromCurrency, setFromCurrency] = useState<string>();
+  const [toCurrency, setToCurrency] = useState<string>();
+  const [exchangeRate, setExchangeRate] = useState<number>();
+  const [amount, setAmount] = useState<number>(1);
+  const [amountInFromCurrency, setAmountInFromCurrency] = useState<boolean>(true);
+
+  let toAmount: number, fromAmount: number;
+
+  if (exchangeRate) {
+    if (amountInFromCurrency) {
+      fromAmount = amount;
+      toAmount = amount * exchangeRate;
+    } else {
+      toAmount = amount;
+      fromAmount = amount / exchangeRate;
+    }
   } else {
-    toAmount = amount
-    fromAmount = amount / exchangeRate
+    fromAmount = toAmount = 0;
   }
 
   useEffect(() => {
-    fetch(BASE_URL)
+    fetch(`${BASE_URL}/eur.json`)
       .then(res => res.json())
       .then(data => {
         const rates = data.eur;
-        const firstCurrency = Object.keys(rates)[143];
+        const firstCurrency = Object.keys(rates)[0];
         setCurrencyOptions(Object.keys(rates));
         setFromCurrency('eur');
-        setToCurrency(firstCurrency)
-        setExchangeRate(data.eur[firstCurrency])
+        setToCurrency(firstCurrency);
+        setExchangeRate(rates[firstCurrency]);
       });
   }, []);
 
   useEffect(() => {
     if (fromCurrency && toCurrency) {
-      fetch(BASE_URL)
+      fetch(`${BASE_URL}/${fromCurrency}.json`)
         .then(res => res.json())
         .then(data => {
-          setExchangeRate(data[fromCurrency][toCurrency])
-        })
+          setExchangeRate(data[fromCurrency][toCurrency]);
+        });
     }
   }, [fromCurrency, toCurrency]);
-  
-  
 
-  function handleFromAmountChange(e) {
-    setAmount(e.target.valueAsNumber)
-    setAmountInFromCurrency(true)
+  function handleFromAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setAmount(e.target.valueAsNumber);
+    setAmountInFromCurrency(true);
   }
 
-  function handleToAmountChange(e) {
-    setAmount(e.target.valueAsNumber)
-    setAmountInFromCurrency(false)
+  function handleToAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setAmount(e.target.valueAsNumber);
+    setAmountInFromCurrency(false);
   }
-  
+
   return (
     <>
       <h1>Convert</h1>
