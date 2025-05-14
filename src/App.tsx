@@ -11,6 +11,7 @@ function App() {
   const [exchangeRate, setExchangeRate] = useState<number>();
   const [amount, setAmount] = useState<number>(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState<boolean>(true);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   let toAmount: number, fromAmount: number;
 
@@ -59,24 +60,47 @@ function App() {
     setAmountInFromCurrency(false);
   }
 
+  function toggleTheme() {
+    setDarkMode(prevMode => !prevMode);
+    document.body.classList.toggle('dark-theme');
+  }
+
+  useEffect(() => {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (prefersDarkMode) {
+      setDarkMode(true);
+      document.body.classList.add('dark-theme');
+    }
+  }, []);
+
   return (
     <>
-      <h1>Convert</h1>
-      <CurrencyRow 
-        currencyOptions={currencyOptions}
-        selectedCurrency={fromCurrency}
-        onChangeCurrency={e => setFromCurrency(e.target.value)}
-        onChangeAmount={handleFromAmountChange}
-        amount={fromAmount}
-      />
-      <div className='equals'>=</div>
-      <CurrencyRow 
-        currencyOptions={currencyOptions}
-        selectedCurrency={toCurrency}
-        onChangeCurrency={e => setToCurrency(e.target.value)}
-        onChangeAmount={handleToAmountChange}
-        amount={toAmount}
-      />
+      <button 
+        className="theme-toggle" 
+        onClick={toggleTheme}
+        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+      
+      <div className="container">
+        <h1>Currency Converter</h1>
+        <CurrencyRow 
+          currencyOptions={currencyOptions}
+          selectedCurrency={fromCurrency}
+          onChangeCurrency={e => setFromCurrency(e.target.value)}
+          onChangeAmount={handleFromAmountChange}
+          amount={fromAmount}
+        />
+        <div className='equals'>=</div>
+        <CurrencyRow 
+          currencyOptions={currencyOptions}
+          selectedCurrency={toCurrency}
+          onChangeCurrency={e => setToCurrency(e.target.value)}
+          onChangeAmount={handleToAmountChange}
+          amount={toAmount}
+        />
+      </div>
     </>
   );
 }
